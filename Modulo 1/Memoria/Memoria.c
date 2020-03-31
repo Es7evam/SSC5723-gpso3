@@ -14,9 +14,9 @@ int main(){
 	const int N = 15000;
 
 	// Aloca a memória
-   	M = malloc (N * sizeof (int*));
+   	M = (int**) malloc (N * sizeof (int*));
    	for(i = 0; i < N; i++){
-      		M[i] = malloc (N * sizeof (int));
+      		M[i] = (int**) malloc (N * sizeof (int));
    	}
 
 	// Seta cada casa da matriz como um número de 0 a 100000
