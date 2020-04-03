@@ -49,16 +49,16 @@ Por meio do comando `strace -c` é possível obter as seguintes saídas, que mos
 
 Resultado do `strace` para o programa relativo à Memória
 
-![Strace Memoria](./imagens/straceMemoria.jpg)
+![](./Imagens/straceMemoria.jpg)
 
 Resultado do `strace` para o programa relativo aos Arquivos
 
-![Strace Arquivos](./imagens/straceArquivos.jpg)
+![](./Imagens/straceArquivos.jpg)
 
 
 Resultado do `strace` para o programa relativo aos Processos
 
-![Strace Processos](./imagens/straceProcessos.jpg)
+![](./Imagens/straceProcessos.jpg)
 
 Como é possível ver pela saída dos comandos de fato tem-se as primitivas analisadas anteriormente.
 
@@ -77,15 +77,15 @@ Trocas de contexto voluntárias: %w" ./a.out
 
 Resultado do comando `time` para o programa relativo à memória
 
-![Time ](./imagens/tempoMemoria.jpg)
+![](./Imagens/tempoMemoria.jpg)
 
 Resultado do comando `time` para o programa relativo aos arquivos
 
-![Time ](./imagens/tempoArquivos.jpg)
+![](./Imagens/tempoArquivos.jpg)
 
 Resultado do comando `time` para o programa relativo aos processos
 
-![Time ](./imagens/tempoProcessos.jpg)
+![](./Imagens/tempoProcessos.jpg)
 
 ## Análise CPU/I-O Bound
 
