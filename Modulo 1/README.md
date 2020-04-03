@@ -2,6 +2,13 @@
 
 Para este módulo foram desenvolvidos três programas distintos, cada qual com o seu foco entre chamadas de sistema relacionadas a Arquivo, Memória ou Processos. Serão escolhidas ao menos 3 primitivas para cada uma das categorias e estas serão analisadas com relação ao tempo de execução em modo de Kernel e de usuário, à quantidade de trocas de contexto e à quantidade de vezes que ela é chamada em cada um dos programas.
 
+
+# Instruções Para Execução dos Códigos
+
+Foi criado um script `run.sh`, que se encontra na pasta `Módulo 1` deste repositório. Ao rodar este programa ele irá compilar os diferentes códigos utilizando o compilador `gcc` e irá executar os comandos `strace` e `time`. É necessário que os 3 estejam instalados, o que é o padrão em uma distribuição como o Ubuntu 18.04 LTS.
+
+É importante clonar todo o repositório, dado que para o programa relativo aos Arquivos, por exemplo, é necessário o uso de 2 arquivos de texto adicionais, já presentes no Github.
+
 ## Identificação e Descrição das Chamadas de Sistema
 
 Por meio do comando strace são identificadas as chamadas de sistemas nas tabelas abaixo, referentes às primitivas de memória, processos e arquivos, respectivamente. As suas breves descrições estão nestas mesmas tabelas. 
@@ -40,21 +47,55 @@ Por meio do comando strace são identificadas as chamadas de sistemas nas tabela
 
 Por meio do comando `strace -c` é possível obter as seguintes saídas, que mostram o tempo de cada chamada ao sistema e a sua frequência em cada um dos programas.
 
-// todo - colocar prints de cada execução
+Resultado do `strace` para o programa relativo à Memória
+
+![Strace Memoria](./imagens/straceMemoria.jpg)
+
+Resultado do `strace` para o programa relativo aos Arquivos
+
+![Strace Arquivos](./imagens/straceArquivos.jpg)
+
+
+Resultado do `strace` para o programa relativo aos Processos
+
+![Strace Processos](./imagens/straceProcessos.jpg)
+
+Como é possível ver pela saída dos comandos de fato tem-se as primitivas analisadas anteriormente.
 
 ## Análise de Tempo de Execução
 
-// todo - Utilizando time
+Utilizando o comando time, juntamente com a flag `-f` para a especificação dos parâmetros adicionais solicitados, tem-se as saídas nas imagens abaixo
 
 ```bash
-$ time -f "Tempo total: %e\n
-Percentual de uso de CPU: %P\n
-Tempo em modo de Kernel: %S\n
-Tempo em modo de usuário: %U\n
-Trocas de contexto involuntárias: %c\n
-Trocas de contexto voluntárias: %w\n" ./a.out
+$ /usr/bin/time -f "Tempo total: %e
+Percentual de uso de CPU: %P
+Tempo em modo de Kernel: %S
+Tempo em modo de usuário: %U
+Trocas de contexto involuntárias: %c
+Trocas de contexto voluntárias: %w" ./a.out
 ```
+
+Resultado do comando `time` para o programa relativo à memória
+
+![Time ](./imagens/tempoMemoria.jpg)
+
+Resultado do comando `time` para o programa relativo aos arquivos
+
+![Time ](./imagens/tempoArquivos.jpg)
+
+Resultado do comando `time` para o programa relativo aos processos
+
+![Time ](./imagens/tempoProcessos.jpg)
 
 ## Análise CPU/I-O Bound
 
-// todo - Analisar com base no tempo obtido anteriormente
+Como mostrado pelas saídas do comando `time` da sessão anterior, os programas possuem características que os distinguem facilmente.
+
+Um exemplo claro é a comparação entre os programas referente às primitivas de Memória e o programa referente às primitivas de Arquivos. Enquanto o primeiro possui alta porcentagem de uso de CPU (99%), o segundo possui este mesmo percentual valendo 6%.
+
+Por meio desta comparação, já seria possível ter fortes indícios que o processo referente aos Arquivos é I/O Bound enquanto o de Memória é CPU-bound.
+
+Outra estatística que corrobora para esta afirmação é o número de trocas de contexto voluntárias do processo de arquivos, que é alto, enquanto no processo de memória este número é baixo.
+
+Esperaria-se que no caso de memória, por serem operações demoradas, haveria um maior número de trocas involuntárias, porém isto não ocorreu por haver poucos processos competindo pela CPU no momento em que este foi executado.
+

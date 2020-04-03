@@ -16,7 +16,7 @@ int main(){
 	// Aloca a memória
    	M = (int**) malloc (N * sizeof (int*));
    	for(i = 0; i < N; i++){
-      		M[i] = (int**) malloc (N * sizeof (int));
+      		M[i] = (int*) malloc (N * sizeof (int));
    	}
 
 	// Seta cada casa da matriz como um número de 0 a 100000
