@@ -2,75 +2,74 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include <unistd.h>
+#include "buffer.c"
 
-// buffer para inserção de informações
-#define ITENS 20
-int buffer[ITENS];
-int ini_buffer = 0, fin_buffer = 0;
+// threads produtor e consumidor
+pthread_t thr_produtor;
+pthread_t thr_consumidor;
 
-// criação de duas thread
-pthread_t thr_produtor, thr_consumidor;
-
-// semaforo de posições
-sem_t pos_livre;
-sem_t pos_ocupada;
-
+// semaforos
+static sem_t exclusao;
+static sem_t vazio_slot;
+static sem_t cheio_slot;
 
 //funções produtor x consumidor
-void* produtor(void *p);
-void* consumidor(void *p);
+void*produtor(void *p);
+void*consumidor(void *p);
 
+int main(int argc, char*argv[]){
+	// cria o buffer
+	buffer buf;
+	inicializa_buffer(&buf);
+	
+  	// Inicializa os semáforos com as posições do buffer
+	sem_init(&exclusao,0,1);
+	sem_init(&cheio_slot,0,0);
+	sem_init(&vazio_slot,0,ITENS);
+	
+  	// Cria as threads de produtor e consumidor
+	pthread_create(&thr_produtor,NULL,produtor,&buf);
+	pthread_create(&thr_consumidor,NULL,consumidor,&buf);
 
-int main(int argc, char *argv[]) {
+  	// Thread principal espera a thread produtor e consumidor acabarem 
+	pthread_join(thr_produtor, NULL);
+  	pthread_join(thr_consumidor, NULL);
 
-  // Inicializa os semáforos com as posições do buffer
-  sem_init(&pos_livre, 0, ITENS);
-  sem_init(&pos_ocupada, 0, 0);
-
-  // Cria as threads de produtor e consumidor
-  pthread_create(&thr_produtor, NULL, produtor, NULL);
-  pthread_create(&thr_consumidor, NULL, consumidor, NULL);
-
-  // Thread principal espera a thread produtor e consumidor acabarem 
-  pthread_join(thr_produtor, NULL);
-  pthread_join(thr_consumidor, NULL);
-
-  // destroy os semáforos
-  sem_destroy(&pos_livre);
-  sem_destroy(&pos_ocupada);
-
-  return 0;
+	// destroy os semáforos
+	sem_destroy(&exclusao);
+	sem_destroy(&cheio_slot);
+	sem_destroy(&vazio_slot);
+	
+	return 0;
 }
 
 // Função Produtor
-void* produtor(void *p) {
-  int i;
-
-  //Região critica
-  for (i = 0; i < ITENS; i++) {
-    sem_wait(&pos_livre);
-    printf("Produtor, processo = %d.\n", i);
-    fin_buffer = (fin_buffer + 1) % ITENS;
-    buffer[fin_buffer] = i;
-    sem_post(&pos_ocupada);
-    sleep(random() % 3);
-  }
-  return NULL;
+void* produtor(void *p){
+	int data=0;
+  	// região critica
+	for(int i = 0; i < ITENS; i++){
+		data++;
+		sem_wait(&vazio_slot);
+		sem_wait(&exclusao);
+    		printf("Produtor, processo = %d.\n", i);
+		insere_buffer(data,p);
+		sem_post(&exclusao);
+		sem_post(&cheio_slot);
+    	sleep(random() % 3);
+	}
 }
 
 // Função Consumidor
-void* consumidor(void *p) {
-  int i;
-
-  // região critica
-  for(i = 0; i < ITENS; i++){
-    sem_wait(&pos_ocupada);
-    ini_buffer = (ini_buffer + 1) % ITENS;
-    printf("Consumidor, processo = %d.\n", buffer[ini_buffer]);
-    sem_post(&pos_livre);
-    sleep(random() % 3);
-  }
-  return NULL;
+void* consumidor(void *p){
+	int data;
+  	// região critica
+	for(int i = 0; i < ITENS; i++){
+		sem_wait(&cheio_slot);
+		sem_wait(&exclusao);
+		remove_buffer(&data,p);
+    		printf("Consumidor, processo = %d.\n", data);
+		sem_post(&exclusao);
+		sem_post(&vazio_slot);
+    		sleep(random() % 3);
+	}
 }
-
