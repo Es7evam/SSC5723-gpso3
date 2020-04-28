@@ -1,6 +1,12 @@
 #include "semaforo.h"
 #include "buffer.h"
 
+// Módulo 2 - Problema do Produtor-Consumidor
+// SSC - GPSO4
+// https://github.com/Es7evam/SSC5723-gpso4/
+// Estevam F Arantes
+// Murilo C. dos Santos
+
 // Função Produtor
 void* produtor(void *p){
 	int data=0;
