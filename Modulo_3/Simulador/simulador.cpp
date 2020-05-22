@@ -39,13 +39,15 @@ int main(int argc, char **argv){
 		}
 		else{
 			long long operacao;
+			string opString;
 			cout << "Linha: " << linha;
 			for(int i=0;i<linha.size();i++){
 				if(linha[i] == '(' || linha[i] == ')'){
 					linha[i] = ' ';
 				} 
 			}
-			ss >> operacao;
+			ss >> opString;
+			operacao = strtoull(opString.c_str(), NULL, 2);
 			cout << " : " << operacao << endl;
 			if(comando == "P"){
 
