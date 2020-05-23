@@ -1,4 +1,5 @@
 #include "simulador.h"
+#include "ManipulaMemoria.hh"
 
 bool leituraPagina(int value){
 	for(auto it : paginas){
@@ -24,8 +25,10 @@ int main(int argc, char **argv){
 	int tamPagina = 4096, tamMV = 65536, tamMF = 32768;
 	int qtdPagina = tamMF / tamPagina;
 	
+	Config *config = new Config();
+	ManipulaMemoria *memoria = new ManipulaMemoria(*config);
+
 	// abre o arquivo para leitura
-	
 	freopen(caminhoArquivo, "r", stdin);
 	// percorre o arquivo
 	string linha;
@@ -53,11 +56,17 @@ int main(int argc, char **argv){
 
 			}
 			else if(comando == "I"){
-				cout << "Op. I/O: Processo " << processo << " : Disp.: " << endereco << endl; 
+				cout << "\nOp. I/O: Processo " << processo << " : Disp.: " << endereco << endl; 
 
 			}
 			else if(comando == "W"){
-				cout << "Op. Escrita: Processo " << processo << " : End.: " << endereco << endl; 
+				cout << "\nOp. Escrita: Processo " << processo << " :End.: " << endereco << endl; 
+				int pagIdx = memoria->addrToFrame(endereco);
+				pair<string, int> virtMemFrame = make_pair(processo, pagIdx);
+				
+				memoria->insereVirtual(virtMemFrame);
+				/*
+				// Ignorar 
 				if (paginas.size() <= qtdPagina) 
 					paginas.push_back(endereco);
 				else{
@@ -65,10 +74,19 @@ int main(int argc, char **argv){
 					faltaPagina++;
 				}
 				escrita++;
+				*/
 				
 			}else if(comando == "R"){
+				cout << "\nOp. Leitura: Processo " << processo << " :End.: " << endereco << endl; 
+				int pagIdx = memoria->addrToFrame(endereco);
+				pair<string, int> virtMemFrame = make_pair(processo, pagIdx);
+				
+				memoria->insereVirtual(virtMemFrame);
+
 			// verifica no arquivo se a opcao eh de leitura
 				// verifica se endereco ja existe
+
+				/*
 				if (leituraPagina(endereco)){
 					cout << "igual"<<endl;
 				}else{
@@ -76,6 +94,7 @@ int main(int argc, char **argv){
 				}
 				
 				leitura++;
+				*/
 			}
 		}
 	

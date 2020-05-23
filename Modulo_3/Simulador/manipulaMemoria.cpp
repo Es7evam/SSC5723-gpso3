@@ -20,7 +20,7 @@ string ManipulaMemoria::random_string(std::string::size_type length){
 
 ManipulaMemoria::ManipulaMemoria(Config conf){
     config = conf;
-    memoria.resize(config.tamMaxSecundaria/config.pageSize);
+    //memoria.resize(config.tamMaxSecundaria/config.pageSize);
 }
 
 
@@ -31,9 +31,9 @@ int ManipulaMemoria::addrToFrame(long long addr){
 
 // Simula um acesso ao frame dado na memória real.
 bool ManipulaMemoria::acessoReal(int frame){
-    cout << "Acesso à memória real, frame: " << frame << endl;
+    cout << "\t Acesso à memória real, frame: " << frame << endl;
     if(frame >= config.tamMaxSecundaria/config.pageSize){
-        cout << "\t |-> Acesso impossível, memória secundária excedida." << endl;
+        cout << "\t\t |-> Acesso impossível, memória secundária excedida." << endl;
         return false;
     }
     return true;
@@ -42,12 +42,12 @@ bool ManipulaMemoria::acessoReal(int frame){
 
 // Converte um endereço de memória virtual de um processo em um frame de memória real.
 int ManipulaMemoria::virtToReal(pair<string, int> frameVirt){
-    cout << frameVirt.first << ": Acesso na página virtual " << frameVirt.second << endl;
+    cout << "\t " << frameVirt.first << ": Acesso na página virtual " << frameVirt.second << endl;
 
     if(virtTable.find(frameVirt) == virtTable.end()){
         // memória virtual não tem essa página mapeada na real
         // insere na memória real.
-        // TODO - memoria.push_back(random_string(10));
+        memoria.push_back(random_string(10));
         cout << "\t Inseriu Página Virtual no frame real: " << memoria.size() << endl;
         virtTable[frameVirt] = memoria.size();
     }
@@ -75,6 +75,8 @@ int ManipulaMemoria::insereVirtual(pair<string, int> frame){
     if(onVirtual == true){
         cout << "\t Frame " << frame.first << ":" << frame.second << " está na memória virtual" << endl;
         return virtToReal(frame);
+    }else{
+        cout << "\t Page Fault " << frame.first << " - Frame " << frame.second << endl;
     }
 
     // Checar se processo está no máximo

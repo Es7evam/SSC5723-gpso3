@@ -6,7 +6,7 @@ Config::Config(){
 
     // Tamanhos de memória (em quantidade de páginas)
     tamMemFisica = 2048; 
-    tamMaxSecundaria = 1024;
+    tamMaxSecundaria = 4096;
     tamImgProcesso = 256;
 
     algorithm = "LRU"; // algoritmo utilizado
