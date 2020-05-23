@@ -7,10 +7,7 @@
 
 using namespace std;
 
-deque<int> paginas;
 int leitura = 0, escrita = 0, op = 0, faltaPagina = 0;
 
-bool leituraPagina(int value);
-void algoritmoLRU(int value);
 	
 

@@ -51,11 +51,11 @@ class ManipulaMemoria {
     // Associa caso ainda não esteja mapeada
     int virtToReal(pair<string, int> frameVirt);
 
-    // Insere Na memoria virtual
-    // Checa se já não está inserido e se está cheio
-    // Ajeita caso precise
+    // Checa se já não está existe
+    // Insere se não existir
+    // Faz todos checks e chama remoção caso necessário
     // Retorna frame real onde foi inserido
-    int insereVirtual(pair<string, int> frame);
+    int acessaVirtual(pair<string, int> frame);
 
     // Gera string de tamanho length
     string random_string(std::string::size_type length);

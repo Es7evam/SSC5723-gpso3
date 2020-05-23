@@ -29,6 +29,5 @@ Config::Config(int size, int szEndLogico, int szMemFisica, int szMaxSecundaria, 
     tamImgProcesso = szImgProcesso;
 
     algorithm = algorithm; // algoritmo utilizado
-   
     return;    
 }

@@ -70,7 +70,7 @@ void ManipulaMemoria::removeVirtual(pair<string, int> frame){
     }
 }
 
-int ManipulaMemoria::insereVirtual(pair<string, int> frame){
+int ManipulaMemoria::acessaVirtual(pair<string, int> frame){
     bool onVirtual = checkVirtual(frame);
     if(onVirtual == true){
         cout << "\t Frame " << frame.first << ":" << frame.second << " está na memória virtual" << endl;
