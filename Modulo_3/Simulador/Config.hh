@@ -12,6 +12,7 @@ public:
 
     int pageSize; // tamanho página/quadro
     int tamanhoEndLogico; //tamanho em bits endereço lógico
+    // maxPagVirt = (1 << tamanhoEndLogico)/pageSize;
 
     // Tamanhos de memória 
     int tamMemFisica; 

@@ -9,7 +9,7 @@ Config::Config(){
     tamMaxSecundaria = 1024;
     tamImgProcesso = 256;
 
-    algorithm = algorithm; // algoritmo utilizado
+    algorithm = "LRU"; // algoritmo utilizado
     // 0 -> LRU
     return;    
 }
@@ -29,6 +29,6 @@ Config::Config(int size, int szEndLogico, int szMemFisica, int szMaxSecundaria, 
     tamImgProcesso = szImgProcesso;
 
     algorithm = algorithm; // algoritmo utilizado
-    // 0 -> LRU
+   
     return;    
 }
