@@ -38,7 +38,7 @@ int main(int argc, char **argv){
 			ss >> tamanhoProcesso;
 		}
 		else{
-			long long operacao;
+			long long endereco;
 			string opString;
 			cout << "Linha: " << linha;
 			for(int i=0;i<linha.size();i++){
@@ -47,19 +47,21 @@ int main(int argc, char **argv){
 				} 
 			}
 			ss >> opString;
-			operacao = strtoull(opString.c_str(), NULL, 2);
-			cout << " : " << operacao << endl;
+			endereco = strtoull(opString.c_str(), NULL, 2);
+			cout << " : " << endereco << endl;
 			if(comando == "P"){
 
 			}
 			else if(comando == "I"){
+				cout << "Op. I/O: Processo " << processo << " : Disp.: " << endereco << endl; 
 
 			}
 			else if(comando == "W"){
+				cout << "Op. Escrita: Processo " << processo << " : End.: " << endereco << endl; 
 				if (paginas.size() <= qtdPagina) 
-					paginas.push_back(operacao);
+					paginas.push_back(endereco);
 				else{
-					algoritmoLRU(operacao);
+					algoritmoLRU(endereco);
 					faltaPagina++;
 				}
 				escrita++;
@@ -67,10 +69,10 @@ int main(int argc, char **argv){
 			}else if(comando == "R"){
 			// verifica no arquivo se a opcao eh de leitura
 				// verifica se endereco ja existe
-				if (leituraPagina(operacao)){
+				if (leituraPagina(endereco)){
 					cout << "igual"<<endl;
 				}else{
-					paginas.push_back(operacao);
+					paginas.push_back(endereco);
 				}
 				
 				leitura++;
