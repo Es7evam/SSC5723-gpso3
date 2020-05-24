@@ -90,9 +90,18 @@ long long ManipulaMemoria::acessaVirtual(pair<string, long long> frame){
     // Checar se processo está no máximo
     if(psCount[frame.first] >= tamProcesso[frame.first]/config.pageSize){
         cout << "\t Tamanho do Processo Excedido, removendo uma página" << endl;
-        for(auto par : virtMem){
-            if(par.first == frame.first){
-                removeVirtual(par);
+        if(config.algorithm == "LRU"){
+            for(auto par : virtMem){
+                if(par.first == frame.first){
+                    removeVirtual(par);
+                }
+            }
+        }
+        else if(config.algorithm == "MRU"){
+            for(unsigned int i = virtMem.size()-1; i >= 0; i--){
+                if(virtMem[i].first == frame.first){
+                    removeVirtual(virtMem[i]);
+                }
             }
         }
     }
@@ -101,13 +110,15 @@ long long ManipulaMemoria::acessaVirtual(pair<string, long long> frame){
     long long maxPagVirt = (1 << config.tamanhoEndLogico)/config.pageSize;
     if(virtMem.size() >= maxPagVirt){
         cout << "\t Tamanho da Memória Virtual Total Excedido" << endl;
-        removeVirtual(virtMem[0]);
+        if(config.algorithm == "LRU"){
+            removeVirtual(virtMem[0]);
+        }else if(config.algorithm == "MRU"){
+            removeVirtual(virtMem[virtMem.size()-1]); 
+        }
     }
 
     // Inserir em si
-    if(config.algorithm == "LRU"){
-        virtMem.push_back(frame);
-    }
+    virtMem.push_back(frame);
 
     // Aumentar Contagem do processo
     psCount[frame.first]++;
