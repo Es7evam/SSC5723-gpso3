@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int leitura = 0, escrita = 0, op = 0, faltaPagina = 0;
+int leitura = 0, escrita = 0, op = 0;
 
 	
 

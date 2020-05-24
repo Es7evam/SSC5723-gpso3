@@ -17,7 +17,6 @@ public:
     // Tamanhos de memória 
     int tamMemFisica; 
     int tamMaxSecundaria;
-    int tamImgProcesso;
 
     string algorithm; // algoritmo utilizado
 };

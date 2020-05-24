@@ -17,23 +17,29 @@ class ManipulaMemoria {
     vector<string> memoria;
 
     // Memoria Virtual
-    vector<pair<string, int>> virtMem;
+    vector<pair<string, long long>> virtMem;
 
     // Tabela Memoria Virtual -> Real 
-    map<pair<string, int>, int> virtTable;
+    map<pair<string, long long>, long long> virtTable;
     
     // Tabela Contagem Processo
     map<string, int> psCount;
 
-
     // Remove frame da memória virtual
-    void removeVirtual(pair<string, int> frame);
+    void removeVirtual(pair<string, long long> frame);
 
     // Checa se um frame está na memória virtual
     // Retorna verdadeiro/falso
-    bool checkVirtual(pair<string, int> frame);
+    bool checkVirtual(pair<string, long long> frame);
 
     public:
+
+    // Tabela tamanho processo
+    map<string, long long> tamProcesso;
+
+    // Quantidade pageFault
+    int cPageFault;
+
     /****************
         Funções
     *****************/
@@ -41,21 +47,21 @@ class ManipulaMemoria {
     ManipulaMemoria(Config conf);
 
     // Converte Endereço em um Frame
-    int addrToFrame(long long addr);
+    long long addrToFrame(long long addr);
 
     // Simula acesso de um frame na memória real
     // Chamado automaticamente pela função de virtToReal
-    bool acessoReal(int frame);
+    bool acessoReal(long long frame);
     
     // Recebe pair <processo, endereco> e retorna frame real associada
     // Associa caso ainda não esteja mapeada
-    int virtToReal(pair<string, int> frameVirt);
+    long long virtToReal(pair<string, long long> frameVirt);
 
     // Checa se já não está existe
     // Insere se não existir
     // Faz todos checks e chama remoção caso necessário
     // Retorna frame real onde foi inserido
-    int acessaVirtual(pair<string, int> frame);
+    long long acessaVirtual(pair<string, long long> frame);
 
     // Gera string de tamanho length
     string random_string(std::string::size_type length);

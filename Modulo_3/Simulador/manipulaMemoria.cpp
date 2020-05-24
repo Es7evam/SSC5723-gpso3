@@ -20,17 +20,24 @@ string ManipulaMemoria::random_string(std::string::size_type length){
 
 ManipulaMemoria::ManipulaMemoria(Config conf){
     config = conf;
-    //memoria.resize(config.tamMaxSecundaria/config.pageSize);
+    cPageFault = 0;
+    
+    // Limpando tabelas
+    memoria.clear();
+    virtMem.clear();
+    virtTable.clear();
+    psCount.clear();
+    tamProcesso.clear();
 }
 
 
-int ManipulaMemoria::addrToFrame(long long addr){
-    return (int)(addr/config.pageSize);
+long long ManipulaMemoria::addrToFrame(long long addr){
+    return (long long)(addr/config.pageSize);
 }
 
 
 // Simula um acesso ao frame dado na memória real.
-bool ManipulaMemoria::acessoReal(int frame){
+bool ManipulaMemoria::acessoReal(long long frame){
     cout << "\t Acesso à memória real, frame: " << frame << endl;
     if(frame >= config.tamMaxSecundaria/config.pageSize){
         cout << "\t\t |-> Acesso impossível, memória secundária excedida." << endl;
@@ -41,7 +48,7 @@ bool ManipulaMemoria::acessoReal(int frame){
 
 
 // Converte um endereço de memória virtual de um processo em um frame de memória real.
-int ManipulaMemoria::virtToReal(pair<string, int> frameVirt){
+long long ManipulaMemoria::virtToReal(pair<string, long long> frameVirt){
     cout << "\t " << frameVirt.first << ": Acesso na página virtual " << frameVirt.second << endl;
 
     if(virtTable.find(frameVirt) == virtTable.end()){
@@ -53,13 +60,13 @@ int ManipulaMemoria::virtToReal(pair<string, int> frameVirt){
     }
 
     // se estiver, converte
-    int frameReal = virtTable[frameVirt];
+    long long frameReal = virtTable[frameVirt];
     acessoReal(frameReal);
     return frameReal;
 }
 
 
-void ManipulaMemoria::removeVirtual(pair<string, int> frame){
+void ManipulaMemoria::removeVirtual(pair<string, long long> frame){
     psCount[frame.first]--; 
 
     cout << "\t Apagando da memória virtual: " << frame.first << ": " << frame.second << endl;
@@ -70,17 +77,18 @@ void ManipulaMemoria::removeVirtual(pair<string, int> frame){
     }
 }
 
-int ManipulaMemoria::acessaVirtual(pair<string, int> frame){
+long long ManipulaMemoria::acessaVirtual(pair<string, long long> frame){
     bool onVirtual = checkVirtual(frame);
     if(onVirtual == true){
         cout << "\t Frame " << frame.first << ":" << frame.second << " está na memória virtual" << endl;
         return virtToReal(frame);
     }else{
         cout << "\t Page Fault " << frame.first << " - Frame " << frame.second << endl;
+        cPageFault++;
     }
 
     // Checar se processo está no máximo
-    if(psCount[frame.first] >= config.tamImgProcesso/config.pageSize){
+    if(psCount[frame.first] >= tamProcesso[frame.first]/config.pageSize){
         cout << "\t Tamanho do Processo Excedido, removendo uma página" << endl;
         for(auto par : virtMem){
             if(par.first == frame.first){
@@ -90,7 +98,7 @@ int ManipulaMemoria::acessaVirtual(pair<string, int> frame){
     }
 
     // Checar se virtual está no maximo
-    int maxPagVirt = (1 << config.tamanhoEndLogico)/config.pageSize;
+    long long maxPagVirt = (1 << config.tamanhoEndLogico)/config.pageSize;
     if(virtMem.size() >= maxPagVirt){
         cout << "\t Tamanho da Memória Virtual Total Excedido" << endl;
         removeVirtual(virtMem[0]);
@@ -109,6 +117,6 @@ int ManipulaMemoria::acessaVirtual(pair<string, int> frame){
     return realFrame;
 }
 
-bool ManipulaMemoria::checkVirtual(pair<string, int> frame){
+bool ManipulaMemoria::checkVirtual(pair<string, long long> frame){
     return (find(virtMem.begin(), virtMem.end(), frame) != virtMem.end());
 }

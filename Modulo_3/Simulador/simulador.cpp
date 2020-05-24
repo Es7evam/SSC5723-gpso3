@@ -19,8 +19,9 @@ int main(int argc, char **argv){
 		string processo, comando;
 		ss >> processo >> comando;
 		if(comando == "C"){
-			int tamanhoProcesso;
+			long long tamanhoProcesso;
 			ss >> tamanhoProcesso;
+			memoria->tamProcesso[processo] = tamanhoProcesso;
 		}
 		else{
 			long long endereco;
@@ -40,27 +41,45 @@ int main(int argc, char **argv){
 			#endif
 
 			if(comando == "P"){
+				cout << "Op. CPU: Processo: " << processo << " : Disp.: " << endereco << endl; 
+				long long endCPU;
+				endCPU = (1L << 62) + config->pageSize * endereco; 
+				cout << "\t Mapeado no endereço: " << endCPU << endl;
 
+				// Converte endereço para página
+				long long pagIdx = memoria->addrToFrame(endCPU);
+				pair<string, long long> virtMemFrame = make_pair(processo, pagIdx);
+
+				memoria->acessaVirtual(virtMemFrame);
 			}
 			else if(comando == "I"){
 				cout << "Op. I/O: Processo " << processo << " : Disp.: " << endereco << endl; 
 
+				long long endIO;
+				endIO = (1L << 62) + (1L << 62)/2L + config->pageSize * endereco; 
+				cout << "\t Mapeado no endereço: " << endIO << endl;
+
+				// Converte endereço para página
+				long long pagIdx = memoria->addrToFrame(endIO);
+				pair<string, long long> virtMemFrame = make_pair(processo, pagIdx);
+
+				memoria->acessaVirtual(virtMemFrame);
 			}
 			else if(comando == "W"){
 				cout << "Op. Escrita: Processo " << processo << " :End.: " << endereco << endl; 
 				escrita++;
 
 				// Converte endereço para página
-				int pagIdx = memoria->addrToFrame(endereco);
-				pair<string, int> virtMemFrame = make_pair(processo, pagIdx);
+				long long pagIdx = memoria->addrToFrame(endereco);
+				pair<string, long> virtMemFrame = make_pair(processo, pagIdx);
 
 				
 				memoria->acessaVirtual(virtMemFrame);
 			}else if(comando == "R"){
 				cout << "Op. Leitura: Processo " << processo << " :End.: " << endereco << endl; 
 				leitura++;
-				int pagIdx = memoria->addrToFrame(endereco);
-				pair<string, int> virtMemFrame = make_pair(processo, pagIdx);
+				long long pagIdx = memoria->addrToFrame(endereco);
+				pair<string, long long> virtMemFrame = make_pair(processo, pagIdx);
 				
 				memoria->acessaVirtual(virtMemFrame);
 			}
@@ -72,10 +91,10 @@ int main(int argc, char **argv){
 	
 	// mostra no terminal algumas informacoes referentes ao simulador
 	cout << "\nSimulador Memoria Virtual" << endl;
-	cout << "Quantidade total de operações: " << op << endl;
-	cout << "Quantidade de escrita: " << escrita << endl;
-	cout << "Quantidade de leitura: " << leitura << endl;
-	cout << "Quantidade de falta de pagina: " << faltaPagina << endl;
+	cout << "  Quantidade total de operações: " << op << endl;
+	cout << "  Quantidade de escrita: " << escrita << endl;
+	cout << "  Quantidade de leitura: " << leitura << endl;
+	cout << "  Quantidade de falta de pagina: " << memoria->cPageFault << endl;
 	
 	return 0;
 }
