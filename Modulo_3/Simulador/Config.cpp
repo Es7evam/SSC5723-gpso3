@@ -9,7 +9,7 @@ Config::Config(){
     tamMaxSecundaria = 4096;
 
     algorithm = "LRU"; // algoritmo utilizado
-    // 0 -> LRU
+    // algorithm = "MRU"; // descomentar caso queira utilizar MRU
     return;    
 }
     

@@ -81,7 +81,7 @@ long long ManipulaMemoria::acessaVirtual(pair<string, long long> frame){
     bool onVirtual = checkVirtual(frame);
     if(onVirtual == true){
         cout << "\t Frame " << frame.first << ":" << frame.second << " está na memória virtual" << endl;
-        return virtToReal(frame);
+        removeVirtual(frame);
     }else{
         cout << "\t Page Fault " << frame.first << " - Frame " << frame.second << endl;
         cPageFault++;

@@ -21,6 +21,7 @@ int main(int argc, char **argv){
 		if(comando == "C"){
 			long long tamanhoProcesso;
 			ss >> tamanhoProcesso;
+			cout << "Op. Criação Processo: " << processo << " :Tamanho: " << tamanhoProcesso << endl; 
 			memoria->tamProcesso[processo] = tamanhoProcesso;
 		}
 		else{
@@ -87,8 +88,6 @@ int main(int argc, char **argv){
 		cout << endl;	
 	}
 	
-	// fecha o arquivo 
-	
 	// mostra no terminal algumas informacoes referentes ao simulador
 	cout << "\nSimulador Memoria Virtual" << endl;
 	cout << "  Quantidade total de operações: " << op << endl;
@@ -96,5 +95,7 @@ int main(int argc, char **argv){
 	cout << "  Quantidade de leitura: " << leitura << endl;
 	cout << "  Quantidade de falta de pagina: " << memoria->cPageFault << endl;
 	
+	delete memoria;
+	delete config;
 	return 0;
 }
