@@ -5,74 +5,64 @@
 #include <errno.h>
 #include <unistd.h>
 
+#include <sys/time.h>
+
+typedef unsigned long long ticks;
+
+static __inline__ ticks getticks(void){
+     unsigned a, d;
+     asm("cpuid");
+     asm volatile("rdtsc" : "=a" (a), "=d" (d));
+
+     return (((ticks)a) | (((ticks)d) << 32));
+}
+
 int main(int argc, char*argv[]){
 	FILE *arq;
 	double tempo = 0;
 	int exe = 10, size = 0;
-	time_t t_ini, t_fim;
+	ticks t_ini, t_fim;
+	struct timeval tval_ini, tval_fim, tval_answ;
 	
-	// criação de arquivo
-	char path[100] = "../Arquivos/exclusao/arquivo_size_";
+	// Pegando caminho do arquivo
+	char path[100] = "../Arquivos/arquivo_size_";
+	if(argc < 2){
+		printf("Passar argumento com arquivo!\n");
+		return -1;
+	}
 	strcat(path, argv[1]);
 	strcat(path, ".txt");
-	
-	// percorre as execuções
-	for(int i = 0; i < exe; i++){
-		// abrindo arquivo
-		arq = fopen(path, "w");
-		if (arq == NULL){
-			printf("Problemas na CRIACAO do arquivo\n");
-			return 0;
-		}
-		
-		if(strcmp(argv[1], "5kb") == 0)
-			size = 500;
-		else if(strcmp(argv[1], "10kb") == 0)
-			size = 1000;
-		else if(strcmp(argv[1], "100kb") == 0)
-			size = 10000;
-		else if(strcmp(argv[1], "1mb") == 0)
-			size = 100000;
-		else if(strcmp(argv[1], "10mb") == 0)
-			size = 1000000;
-		else if(strcmp(argv[1], "100mb") == 0)
-			size = 10000000;
-		else if(strcmp(argv[1], "500mb") == 0)
-			size = 50000000;
-		
-		// insere dados no arquivo
-		for(int j=0; j < size; j++){
-			char str[11] = "";
-			strcat(str,"execucao-");
-			strcat(str,"\n");
-			fputs(str, arq);
-		}
 
-		
-	  	// fechando arquivo
-	  	fclose(arq);
-	  	
-		// tempo inicial para cada execucao
-		t_ini = time(NULL);
-		
-  		// remove arquivo
-		remove(path);
-		
-		// tempo final para cada execucao
-		t_fim = time(NULL);
-		
-		// verifica a diferenca do tempo inicial com o final 
-		// e soma em uma variavel que armazena todos os resultaos
-		tempo += difftime(t_fim, t_ini);
-  	}
-		
-	
-	// calcula a media dos tempo
-	tempo /= exe;
+	// Tempo Inicial
+	t_ini = getticks();
+	gettimeofday(&tval_ini, NULL);
+	//t_ini = time(NULL);
 
-	// mostra o tempo médio final
-	printf("Tempo: %f\n",tempo);
-	
+	// Checa se arquivo existe
+	if (access(path, F_OK) != -1){
+		// remove arquivo
+		if(remove(path) == -1){
+			fprintf(stderr, "Erro ao remover arquivo!\n");
+		}else{
+			fprintf(stderr, "Arquivo %s removido com sucesso!", path);
+		}	
+	}else{
+		// Arquivo não existe
+		fprintf(stderr, "Arquivo %s não existe!\n", path);
+	}
+
+	// Tempo Final
+	gettimeofday(&tval_fim, NULL);
+	t_fim = getticks();
+	//t_fim = time(NULL);
+
+	timersub(&tval_fim, &tval_ini, &tval_answ);
+
+	// verifica a diferenca do tempo inicial com o final 
+	// e soma em uma variavel que armazena todos os resultaos
+	tempo = (double)(t_fim - t_ini)/ CLOCKS_PER_SEC;
+	printf("Milhões de clocks de cpu: %lf\n", tempo);
+	printf("Tempo total %ld:%06ld\n", (long int)tval_answ.tv_sec, (long int)tval_answ.tv_usec);
 
 	return 0;
 }
