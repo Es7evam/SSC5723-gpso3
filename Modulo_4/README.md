@@ -17,7 +17,11 @@ file system - sistema de arquivos do OS/2). O NTFS possui uma estrutura que arma
 O ext4 é um sistema de arquivos de registro para Linux, desenvolvido para ser o sucessor do ext3. Assim, o ext4 perimiut a criação dos extents que é um conjunto de blocos físicos contíguos, o que, para arquivos grandes, faz aumentar o desempenho e reduzir a fragmentação. O ext4 assim como o ext3 possuem um registro de ações que é chamado de journling. O o journaling grava todas as mudas e usa um arquivo de registro de ações maior, só que este tipo pode ser mais lento mas possui maior capacidade de evitar perdas.
 
 ## Instrução para execução
-Para compilar o código é necessário executar o comando make para que gere um arquivo de execução. E assim, um script em python foi desenvolvido que executa todas as opções e mostra os resultados.
+Para compilar o código é necessário executar o comando make para que gere um arquivo de execução. E assim, o script `test.py`, em python3, presente na pasta `Códigos` foi desenvolvido que executa todas as opções e mostra os resultados.
+
+Para executá-lo basta utilizar o comando `python test.py`.
+
+Caso algum problema de biblioteca ocorra pode ser necessário instalar a biblioteca matplotlib, do python, o que varia com base na distribuição utilizada.
 
 ## Resultados
 
