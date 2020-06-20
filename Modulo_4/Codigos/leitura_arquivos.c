@@ -44,7 +44,7 @@ int main(int argc, char*argv[]){
 
 		fseek(arq, 0L, SEEK_END);
 		long sz = ftell(arq);
-		printf("Arquivo de tamanho %ld\n", sz);
+		fprintf(stderr, "Arquivo de tamanho %ld\n", sz);
 		fclose(arq);
 	}else{
 		// Arquivo não existe
