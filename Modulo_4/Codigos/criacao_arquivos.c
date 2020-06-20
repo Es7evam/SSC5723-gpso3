@@ -18,7 +18,7 @@ static __inline__ ticks getticks(void){
 int main(int argc, char*argv[]){
 	FILE *arq;
 	double tempo = 0;
-	int exe = 10, size = 0;
+	int size = 0;
 	ticks t_ini, t_fim;
 	struct timeval tval_ini, tval_fim, tval_answ;
 	
@@ -47,17 +47,17 @@ int main(int argc, char*argv[]){
 	if(strcmp(argv[1], "5kb") == 0)
 		size = 500;
 	else if(strcmp(argv[1], "10kb") == 0)
-		size = 1000;
-	else if(strcmp(argv[1], "100kb") == 0)
 		size = 10000;
-	else if(strcmp(argv[1], "1mb") == 0)
+	else if(strcmp(argv[1], "100kb") == 0)
 		size = 100000;
-	else if(strcmp(argv[1], "10mb") == 0)
+	else if(strcmp(argv[1], "1mb") == 0)
 		size = 1000000;
-	else if(strcmp(argv[1], "100mb") == 0)
+	else if(strcmp(argv[1], "10mb") == 0)
 		size = 10000000;
+	else if(strcmp(argv[1], "100mb") == 0)
+		size = 100000000;
 	else if(strcmp(argv[1], "500mb") == 0)
-		size = 50000000;
+		size = 500000000;
 	
 	// insere dados no arquivo
 	for(unsigned int j=0; j < size/sizeof(j); j++){
@@ -77,7 +77,6 @@ int main(int argc, char*argv[]){
 	// e soma em uma variavel que armazena todos os resultaos
 	tempo = (double)(t_fim - t_ini)/ CLOCKS_PER_SEC;
 	printf("C: Milhões de clocks de cpu: %lf\n", tempo);
-	printf("C: Tempo total %ld:%06ld\n", (long int)tval_answ.tv_sec, (long int)tval_answ.tv_usec);
-
+	printf("C: Tempo total %ld.%06ld\n", (long int)tval_answ.tv_sec, (long int)tval_answ.tv_usec);
 	return 0;
 }

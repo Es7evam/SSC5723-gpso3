@@ -18,9 +18,7 @@ static __inline__ ticks getticks(void){
 }
 
 int main(int argc, char*argv[]){
-	FILE *arq;
 	double tempo = 0;
-	int exe = 10, size = 0;
 	ticks t_ini, t_fim;
 	struct timeval tval_ini, tval_fim, tval_answ;
 	
@@ -44,7 +42,7 @@ int main(int argc, char*argv[]){
 		if(remove(path) == -1){
 			fprintf(stderr, "Erro ao remover arquivo!\n");
 		}else{
-			fprintf(stderr, "Arquivo %s removido com sucesso!", path);
+			fprintf(stderr, "Arquivo %s removido com sucesso!\n", path);
 		}	
 	}else{
 		// Arquivo não existe
@@ -62,7 +60,7 @@ int main(int argc, char*argv[]){
 	// e soma em uma variavel que armazena todos os resultaos
 	tempo = (double)(t_fim - t_ini)/ CLOCKS_PER_SEC;
 	printf("Milhões de clocks de cpu: %lf\n", tempo);
-	printf("Tempo total %ld:%06ld\n", (long int)tval_answ.tv_sec, (long int)tval_answ.tv_usec);
+	printf("Tempo total %ld.%06ld\n", (long int)tval_answ.tv_sec, (long int)tval_answ.tv_usec);
 
 	return 0;
 }
