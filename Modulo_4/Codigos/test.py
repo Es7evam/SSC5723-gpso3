@@ -1,11 +1,17 @@
 import os
 import statistics as stat
+import matplotlib.pyplot as plt
 
 def media(lista):
     return sum(lista)/len(lista)
 
-
 sizes = ['5kb', '10kb', '100kb', '1mb', '10mb', '100mb', '500mb']
+Cavgs = []
+Lavgs = []
+Exavgs = []
+Cstdev = []
+Lstdev = []
+Exstdev = []
 
 for tamanho in sizes:
     Cclocks = []
@@ -16,7 +22,6 @@ for tamanho in sizes:
     Extimes = []
 
     for it in range(0, 10):
-        print("Iteracao", it)
         inputstr = "./criacao_arquivos " + tamanho + " 1> output 2>/dev/null" 
         os.system(inputstr)
         f = open("output")
@@ -51,13 +56,25 @@ for tamanho in sizes:
     print(" Desvio Padrao: ", stat.stdev(Ltimes))
     print("Exclusao\n Tempo medio: ", media(Extimes))
     print(" Desvio Padrao: ", stat.stdev(Extimes))
-    #print(Cclocks)
-    #print(Ctimes)
-    #print(Lclocks)
-    #print(Ltimes)
-    #print(Exclocks)
-    #print(Extimes)
+    Cavgs.append(media(Ctimes))
+    Cstdev.append(stat.stdev(Ctimes))
+    Lavgs.append(media(Ltimes))
+    Lstdev.append(stat.stdev(Ltimes))
+    Exavgs.append(media(Extimes))
+    Exstdev.append(stat.stdev(Extimes))
 
+plt.errorbar(sizes, Cavgs, Cstdev, fmt='-o', label='Criação')
+plt.errorbar(sizes, Lavgs, Lstdev, fmt='-o', label='Leitura')
+plt.errorbar(sizes, Exavgs, Exstdev, fmt='-o', label='Exclusão')
+plt.xlabel('Tamanho do arquivo')
+plt.ylabel('Tempo (s)')
+plt.legend()
+plt.savefig('Graficos.png')
+plt.title("Comparativo entre manipulações - NTFS")
+
+print(Cavgs, Cstdev)
+print(Lavgs, Lstdev)
+print(Exavgs, Exstdev)
 
 
 
